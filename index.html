@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code Email Generator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>QR Code Email Generator</h1>
+    <p>Masukkan detail email untuk membuat QR Code:</p>
+    <label for="email-input">Email Tujuan:</label>
+    <input type="email" id="email-input" placeholder="Masukkan email..." required><br>
+    <label for="subject-input">Subjek Email:</label>
+    <input type="text" id="subject-input" placeholder="Masukkan subjek..." required><br>
+    <label for="body-input">Isi Pesan:</label>
+    <textarea id="body-input" placeholder="Masukkan pesan..." rows="4"></textarea><br>
+    <button id="generate-btn">Generate QR Code</button>
+    <div id="qr-code"></div>
+  </div>
+
+  <!-- Tambahkan CDN QRCode.js -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <!-- Script JavaScript -->
+  <script>
+    const qrCodeContainer = document.getElementById("qr-code");
+    const generateBtn = document.getElementById("generate-btn");
+
+    generateBtn.addEventListener("click", () => {
+      const email = document.getElementById("email-input").value.trim();
+      const subject = document.getElementById("subject-input").value.trim();
+      const body = document.getElementById("body-input").value.trim();
+
+      if (!email) {
+        alert("Mohon masukkan email tujuan!");
+        return;
+      }
+
+      // Kosongkan container QR Code sebelum membuat yang baru
+      qrCodeContainer.innerHTML = "";
+
+      // Format mailto
+      const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+      // Generate QR Code
+      QRCode.toCanvas(mailtoLink, { width: 200 }, (error, canvas) => {
+        if (error) {
+          console.error(error);
+          alert("Gagal membuat QR Code!");
+          return;
+        }
+        qrCodeContainer.appendChild(canvas);
+      });
+    });
+  </script>
+</body>
+</html>
